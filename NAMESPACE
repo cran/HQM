@@ -1,0 +1,11 @@
+importFrom("stats", "approxfun", "rnorm", "var")
+
+importFrom("utils",  tail )
+
+
+
+
+exportPattern("^[[:alpha:]]+")
+
+exportPattern("^[^\\.]")
+
