@@ -1,12 +1,12 @@
-\name{h_xt}
-\title{Local constant future conditional hazard rate estimation at a single time point}
-\alias{h_xt}
+\name{h_xtll}
+\title{Local linear future conditional hazard rate estimation at a single time point}
+\alias{h_xtll}
 \description{
-Calculates the future conditional hazard rate for a marker value \code{x} and a time value \code{t}.
+Calculates the local linear future conditional hazard rate for a marker value \code{x} and a time value \code{t}.
 }
 
 \usage{
-h_xt(br_X, br_s, int_X, size_s_grid, alpha, x,t, b, Yi,n)
+h_xtll(br_X, br_s, int_X, size_s_grid, alpha, x,t, b, Yi,n, Y)
 }
 
 \arguments{
@@ -20,16 +20,25 @@ h_xt(br_X, br_s, int_X, size_s_grid, alpha, x,t, b, Yi,n)
 \item{b}{Bandwidth.}
 \item{Yi}{A matrix made by \code{\link{make_Yi}} indicating the exposure. }
 \item{n}{Number of individuals.}
+\item{Y}{A matrix made by \code{\link{make_Y}} indicating the exposure. }
 }
 
 \details{
-Function \code{\link{h_xt}}   implements the future conditional hazard estimator
+Function \code{\link{h_xtll}} implements the future conditional hazard estimator
 \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i(X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s},}
 where \eqn{X} is the marker, \eqn{Z} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details. The future conditional hazard is defined as
 \deqn{h_{x,T}(t) = P\left(T_i\in (t+T, t+T+dt)| X_i(T)=x, T_i > t+T\right),}
-where \eqn{T_i} is the survival time and \eqn{X_i} the marker of individual \eqn{i} observed in the time frame \eqn{[0,T]}. Function \code{\link{h_xt}} uses an classic (unmodified) kernel function \eqn{K_b()}, e.g. the Epanechnikov kernel.
+where \eqn{T_i} is the survival time and \eqn{X_i} the marker of individual \eqn{i} observed in the time frame \eqn{[0,T]}.
 
- 
+The function \code{\link{h_xtll}}, in the place of \eqn{K_b()} uses the kernel    
+\deqn{K_{x,b}(u)= \frac{K_b(u)-K_b(u)u^T D^{-1}c_1}{c_0 - c_1^T D^{-1} c_1}, }
+where \eqn{c_1 = (c_{11}, \dots, c_{1d})^T, D = (d_{ij})_{(d+1) \times (d+1)}} with
+\deqn{
+c_0  = \sum_{i=1}^n \int_0^T K_b(x-X_i(s)) Z_i(s)ds, \\
+c_{ij}  = \sum_{i=1}^n \int_0^T K_b(x-X_i(s))\{x-X_{ij}(s)\} Z_i(s)ds, \\
+d_{jk}  =  \sum_{i=1}^n \int_0^T K_b(x-X_i(s))\{x-X_{ij}(s)\}\{x-X_{ik}(s)\} Z_i(s)ds,
+}
+see also Nielsen (1998).
 }
 
 \value{
@@ -43,7 +52,7 @@ A single numeric value of \eqn{\hat h_x(t)}.
 
 
 
-\seealso{ \code{\link{get_alpha}} }
+\seealso{ \code{\link{get_alpha}}, \code{\link{dij}} }
 
 \examples{
 pbc2_id = to_id(pbc2)
@@ -72,5 +81,5 @@ Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s,
 
 x = 2
 t = 2
-h_hat = h_xt(br_X, br_s, int_X, size_s_grid, alpha, x, t, b, Yi, n)
+h_hat = h_xtll(br_X, br_s, int_X, size_s_grid, alpha, x, t, b, Yi, n, Y)
 }
