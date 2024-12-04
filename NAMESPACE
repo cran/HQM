@@ -1,8 +1,11 @@
-importFrom("stats", "approxfun", "rnorm", "var")
+importFrom("stats", "approxfun", "approx", "rnorm", "var")
 
 importFrom("utils",  tail )
-
-importFrom("survival",  survfit ) 
+importFrom("JM",  survfitJM )
+importFrom("survival",  survfit, Surv, coxph )
+importFrom("timeROC",  timeROC )
+importFrom("pec",  pec )
+importFrom("nlme",  lme )
 
 
 exportPattern("^[[:alpha:]]+")

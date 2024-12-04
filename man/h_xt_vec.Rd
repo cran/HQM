@@ -69,4 +69,43 @@ Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s,
 t = 2
 
 h_xt_vec(br_X, br_s, size_s_grid, alpha, t, b, Yi, int_X, n)
+
+
+#Single even per individual example: lung cancer data example 
+library(survival) #load the data from the survival package
+
+size_s_grid <- size_X_grid <- 100
+n=nrow(lung)
+s = lung$time
+X = lung$age
+XX = lung$age
+ss <- lung$time
+delta <- lung$status -1 #transform censoring indicators to 0/1 format
+
+
+br_s = seq(0, max(s), max(s)/( size_s_grid-1))
+br_X = seq(min(X), max(X), (max(X)-min(X))/( size_X_grid-1))
+X_lin = lin_interpolate(br_s, 1:n, 1:n, X, s)
+int_X <- findInterval(X_lin, br_X)
+int_s = rep(1:length(br_s), n)
+
+N <- make_N(lung, lung, br_X, br_s, ss, XX, delta)
+Y <- make_Y(lung, lung, X_lin, br_X, br_s,
+            size_s_grid, size_X_grid, int_s, int_X, event_time = 'time', n)
+
+b =  5 
+alpha<-get_alpha(N, Y, b, br_X, K=Epan )
+
+Yi <- make_Yi(lung, lung, X_lin, br_X, br_s,
+              size_s_grid, size_X_grid, int_s, int_X, event_time = 'time', n)
+
+t =  60
+#Calculate hazard rate function
+HR.fun<-h_xt_vec(br_X, br_s, size_s_grid, alpha, t, b, Yi, int_X, n) 
+#Calculate survival function
+Surv.fun<- make_sf(20, HR.fun)
+#plot the result  
+plot(br_s, Surv.fun, type="l" )
+
+
 }

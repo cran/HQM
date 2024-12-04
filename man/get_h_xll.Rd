@@ -37,8 +37,10 @@ across a grid of possible time values \eqn{t}, where \eqn{X} is the marker, \eqn
 
 \examples{
 library(survival)
-b = 10
-x = 3
+library(JM)
+
+# Compare Local constant and local linear estimator, use KM for reference
+# Albumin marker, use landmarking
 Landmark <- 2
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
 b=0.9
@@ -63,4 +65,47 @@ lines(kma2$time, kma2$surv, type="s",  lty=2, lwd=2, col=3)
 
 legend("topright", c(  "Local linear HQM", "Local constant HQM", "Kaplan-Meier"), 
         lty=c(1, 2, 2), col=1:3, lwd=2, cex=1.7)
+        
+
+\dontrun{       
+#Compare JM, HQM and KM for Bilirubin       
+b = 10 
+Landmark <- 1
+lmeFit <- lme(serBilir ~ year, random = ~ year | id, data = pbc2)
+coxFit <- coxph(Surv(years, status2) ~ serBilir, data = pbc2.id, x = TRUE)
+
+ 
+jointFit0 <- jointModel(lmeFit, coxFit, timeVar = "year", 
+                                method = "piecewise-PH-aGH")
+pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
+ 
+
+timesS1 <- seq(1,14,by=0.5)
+predT1 <- survfitJM(jointFit0, newdata = pbcT1,survTimes = timesS1)
+nm<-length(predT1$summaries)
+
+mat.out1<-matrix(nrow=length(timesS1), ncol=nm)
+for(r in 1:nm)
+{
+  SurvLand <- predT1$summaries[[r]][,"Mean"][1]
+  mat.out1[,r] <- predT1$summaries[[r]][,"Mean"]/SurvLand
+}
+sfit1y<-rowMeans(mat.out1, na.rm=TRUE)
+
+
+arg1<- get_h_x(pbcT1, 'serBilir', event_time_name = 'years',  
+        time_name = 'year', event_name = 'status2', 1, 10) 
+br_s1  = seq(Landmark, 14,  length=99)
+sfbil1<- make_sf(  (br_s1[2]-br_s1[1])/5.4 , arg1)
+kma1<- survfit(Surv(years , status2) ~ 1, data = pbcT1)
+
+plot(br_s1, sfbil1, type="l", ylim=c(0,1), xlim=c(Landmark,14), 
+                    ylab="Survival probability", xlab="years",lwd=2)
+lines(timesS1, sfit1y, col=2,  lwd=2, lty=2)
+lines(kma1$time, kma1$surv, type="s", lty=2, lwd=2, col=3 )
+legend("bottomleft", c("HQM est.", "Joint Model est.", "Kaplan-Meier"), 
+                                    lty=c(1,2,2), col=1:3, lwd=2, cex=1.7)
+}
+
+
 }
