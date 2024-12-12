@@ -1,4 +1,4 @@
-96f93591bd9b75382e1ada1f427d4e25 *DESCRIPTION
+30899829f81088eae1a99d7c1850e393 *DESCRIPTION
 1b2e621b32f5d9c039abd91895071c73 *NAMESPACE
 a914655ecae565abf8502a6ff418d3fb *R/Conf_bands.R
 c1c07c55dae7698f95bda001c2d0d6ca *R/Epan.R
@@ -46,7 +46,7 @@ e117b06730b6bde5c3a92ae62856e631 *man/get_alpha.Rd
 07d6f4a355ef36695de5004cc2697903 *man/get_h_x.Rd
 e65bc9b5857a05b21f639ea2a0995f13 *man/get_h_xll.Rd
 c44dd6a103a76b5f87de9bb042170620 *man/h_xt.Rd
-3a631c9c6670265caa96ef172fcadaa9 *man/h_xt_vec.Rd
+1052b4fb2478ecc2a64450e8228e2da3 *man/h_xt_vec.Rd
 c05f8f170015223f6124897d3450a95c *man/h_xtll.Rd
 70820e7a4686564fab6c10da41706fd2 *man/lin_interpolate.Rd
 02bc12836255a6811833f37d0ec83436 *man/llK_b.Rd
