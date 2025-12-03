@@ -53,18 +53,20 @@ int_X <- findInterval(X_lin, br_X)
 int_s = rep(1:length(br_s), n)
 
 N <- make_N(pbc2, pbc2_id, breaks_X=br_X, breaks_s=br_s, ss, XX, delta)
-Y <- make_Y(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X, 'years', n)
+Y <- make_Y(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, 
+            int_s, int_X, 'years', n)
 
 b = 1.7
 alpha<-get_alpha(N, Y, b, br_X, K=Epan )
 
-Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X,'years', n)
+Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, 
+              int_X,'years', n)
 Ni  <- make_Ni(breaks_s=br_s, size_s_grid, ss, delta, n)
 
 t = 2
 
 h_xt_mat = t(sapply(br_s[1:99], function(si){
-                    h_xt_vec(br_X, br_s, size_s_grid, alpha, t, b, Yi, int_X, n)}))
+          h_xt_vec(br_X, br_s, size_s_grid, alpha, t, b, Yi, int_X, n)}))
 
 b_selection_prep_g(h_xt_mat, int_X, size_X_grid, n, Yi)
 }

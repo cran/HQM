@@ -54,8 +54,10 @@ X_lin = lin_interpolate(br_s, pbc2_id$id, pbc2$id, X, s)
 int_X <- findInterval(X_lin, br_X)
 int_s = rep(1:length(br_s), n)
 
-Yi<-make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X, 'years', n)
-Y<-make_Y(pbc2, pbc2_id, X_lin, br_X, br_s,size_s_grid,size_X_grid, int_s,int_X, 'years', n)
+Yi<-make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X, 
+            'years', n)
+Y<-make_Y(pbc2, pbc2_id, X_lin, br_X, br_s,size_s_grid,size_X_grid, int_s,int_X, 
+            'years', n)
 
 t = 2
 x = 2

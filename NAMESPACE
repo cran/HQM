@@ -1,4 +1,4 @@
-importFrom("stats", "approxfun", "approx", "rnorm", "var")
+importFrom("stats", "approxfun", "approx", "rnorm", "var", "complete.cases", "optim", "quantile", "sd")
 
 importFrom("utils",  tail )
 importFrom("JM",  survfitJM )

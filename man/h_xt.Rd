@@ -2,7 +2,7 @@
 \title{Local constant future conditional hazard rate estimation at a single time point}
 \alias{h_xt}
 \description{
-Calculates the future conditional hazard rate for a marker value \code{x} and a time value \code{t}.
+Calculates the (indexed) future conditional hazard rate for a marker value \code{x} and a time value \code{t}.
 }
 
 \usage{
@@ -24,11 +24,16 @@ h_xt(br_X, br_s, int_X, size_s_grid, alpha, x,t, b, Yi,n)
 
 \details{
 Function \code{\link{h_xt}}   implements the future conditional hazard estimator
+\deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i(\hat \theta^T X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x-\hat \theta^T X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x- \hat \theta^T X_i(s))\mathrm {d}s},}
+where, for a positive integer \eqn{p},  \eqn{\hat \theta^T = (\hat \theta_1, \dots, \hat \theta_p )}  is the vector of the estimated indexing parameters,  
+\eqn{X_i = (X_{1, i}, \dots, X_{i,p})} is a vector of markers for indexing, \eqn{Z_i} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details 
+and \eqn{K_b = b^{-1}K(./b)} is an ordinary kernel function, e.g. the Epanechnikov kernel. For \eqn{p=1} and \eqn{\hat \theta = 1} the above estimator becomes the HQM hazard rate estimator conditional on one covariate, 
 \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i(X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s},}
-where \eqn{X} is the marker, \eqn{Z} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details. The future conditional hazard is defined as
-\deqn{h_{x,T}(t) = P\left(T_i\in (t+T, t+T+dt)| X_i(T)=x, T_i > t+T\right),}
-where \eqn{T_i} is the survival time and \eqn{X_i} the marker of individual \eqn{i} observed in the time frame \eqn{[0,T]}. Function \code{\link{h_xt}} uses an classic (unmodified) kernel function \eqn{K_b()}, e.g. the Epanechnikov kernel.
+defined in equation (2) of \doi{10.1093/biomet/asaf008}. 
 
+The future conditional hazard is defined as
+\deqn{h_{x,T}(t) = P\left(T_i\in (t+T, t+T+dt)| \theta_0^T X_i(T)=x, T_i > t+T\right),}
+where \eqn{T_i} is the survival time and \eqn{X_i} the marker of individual \eqn{i} observed in the time frame \eqn{[0,T]}. 
  
 }
 
@@ -36,9 +41,11 @@ where \eqn{T_i} is the survival time and \eqn{X_i} the marker of individual \eqn
 A single numeric value of \eqn{\hat h_x(t)}.
 }
 
+
+
 \references{
-%\href{https://doi.org/10.1080/03461238.1998.10413997}{Nielsen (1998), Marker dependent kernel hazard estimation from local linear estimation, Scandinavian Actuarial Journal,   pp.  113-124.}
-\doi{doi:10.1080/03461238.1998.10413997}%{Nielsen (1998), Marker dependent kernel hazard estimation from local linear estimation, Scandinavian Actuarial Journal,   pp.  113-124.}
+Bagkavos, I., Isakson, R., Mammen, E., Nielsen, J., and Proust–Lima, C. (2025). 
+Biometrika, 112(2), asaf008. \doi{10.1093/biomet/asaf008}
 }
 
 
@@ -63,12 +70,14 @@ int_X <- findInterval(X_lin, br_X)
 int_s = rep(1:length(br_s), n)
 
 N <- make_N(pbc2, pbc2_id, breaks_X=br_X, breaks_s=br_s, ss, XX, delta)
-Y <- make_Y(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X, 'years', n)
+Y <- make_Y(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X, 
+            'years', n)
 
 b = 1.7
 alpha<-get_alpha(N, Y, b, br_X, K=Epan )
 
-Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X,'years', n)
+Yi <- make_Yi(pbc2, pbc2_id, X_lin, br_X, br_s, size_s_grid, size_X_grid, int_s, int_X,
+              'years', n)
 
 x = 2
 t = 2

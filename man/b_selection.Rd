@@ -30,10 +30,11 @@ where \eqn{\hat h_x(t)} is a smoothed kernel density estimator of \eqn{ h_x(t)} 
 A list with the tested bandwidths and its cross validation scores.
 }
 
-%\references{
-%\href{https://projecteuclid.org/download/pdf_1/euclid.aos/1176346265}{Tanner and Wong (1983), The Estimation Of The Hazard Function From Randomly Censored Data By The Kernel Method, Annals of Statistics,  3, pp. 989-993.}
-%}
 
+\references{
+Bagkavos, I., Isakson, R., Mammen, E., Nielsen, J., and Proust–Lima, C. (2025). 
+Biometrika, 112(2), asaf008. \doi{10.1093/biomet/asaf008}
+}
 
 
 \seealso{ \code{\link{b_selection_prep_g}, \link{Q1}, \link{R_K}, \link{prep_cv}, \link{dataset_split}} }
@@ -41,8 +42,17 @@ A list with the tested bandwidths and its cross validation scores.
 \examples{
 \donttest{
 I = 26
-b_list = seq(0.9, 1.3, 0.1)
+# For Albumin marker:
+b_list = seq(0.9, 1.7, 0.1)
 
 b_scores_alb = b_selection(pbc2, 'albumin', 'years', 'year', 'status2', I, b_list)
-b_scores_alb[[2]][which.min(b_scores_alb[[1]])]}
+b_scores_alb[[2]][which.min(b_scores_alb[[1]])]
+
+# For Bilirubin marker:
+b_list = seq(3, 4, 0.1)
+b_scores_bil = b_selection(pbc2, 'serBilir', 'years', 'year', 'status2', I, b_list)
+b_scores_bil[[2]][which.min(b_scores_bil[[1]])]
+b_scores_bil
+
+}
 }
