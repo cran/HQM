@@ -65,10 +65,12 @@ t = par.x1 * t.x1 + par.x2 *t.x2
 xin <- pbc2[,c(id, marker_name1, marker_name2, event_time_name, time_name, event_name)]
 n <- length(xin$id)
 nn<-max(  as.double(xin[,'id']) )
+xin.id <- to_id(xin)
+
 
 #  Create bootstrap samples by group:
 set.seed(1)  
-B<-100
+B<- 10 # 400 #50
 Boot.samples<-list()
 for(j in 1:B)
 {
@@ -86,7 +88,7 @@ for(j in 1:B)
   xin.i<-xin[i.use,]
   Boot.samples[[j]]<- xin.i[order(xin.i$id),] #xin[i.use,]
 }
-true.hazard<- Sim.True.Hazard(Boot.samples, id='id', marker_name1=marker_name1,  
+true.hazard<- Sim.True.Hazard(Boot.samples, id='id', 100,  marker_name1=marker_name1,  
                     marker_name2= marker_name2, event_time_name = event_time_name, 
                     time_name = time_name,  event_name = event_name, 
                     in.par = c(par.x1,  par.x2), b)

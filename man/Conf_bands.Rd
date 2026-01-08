@@ -6,7 +6,7 @@ Implements the uniform and pointwise confidence bands for the future conditional
 }
 
 \usage{
-Conf_bands(data, marker_name, event_time_name = 'years',
+Conf_bands(data,   marker_name, event_time_name = 'years',
             time_name = 'year', event_name = 'status2', x, b)
 }
 
@@ -51,15 +51,15 @@ A list with pointwise, uniform confidence bands and the estimator \eqn{\hat h_x(
 \examples{
 b = 10
 x = 3
-size_s_grid <- 100
+size_s_grid<-100
 s = pbc2$year
 br_s = seq(0, max(s), max(s)/( size_s_grid-1))
 
 
-c_bands = Conf_bands(pbc2, 'serBilir', event_time_name = 'years',
+c_bands = Conf_bands(pbc2,   'serBilir', event_time_name = 'years',
                     time_name = 'year', event_name = 'status2', x, b)
 
-J = 60
+J = 80
 plot(br_s[1:J], c_bands$h_hat[1:J], type = "l", ylim = c(0,1), ylab = 'Hazard', xlab = 'Years')
 
 lines(br_s[1:J], c_bands$I_p_up[1:J], col = "red")

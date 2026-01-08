@@ -86,6 +86,7 @@ time_name <- 'year'
 event_name <- 'status2'
 id<-'id'
 
+
 par.x1  <- 0.0702 #0.149
 par.x2 <- 0.0856 #0.10
 t.x1 = 0 # refers to zero mean variables - slightly high
@@ -93,22 +94,34 @@ t.x2 = 1.9 # refers to zero mean variable - high
 b = 0.42# The result, on the indexed marker 'indmar' of 
          #\code{b_selection(pbc2, 'indmar', 'years', 'year', 'status2', I=26, seq(0.2,0.4,by=0.01))} 
 t = par.x1 * t.x1 + par.x2 *t.x2
+ls<-50
 
-# Calculate the indexed HQM estimator on the original sample:
-arg2<-SingleIndCondFutHaz(pbc2, id, marker_name1, marker_name2, event_time_name = 'years', 
-        time_name = 'year', event_name = 'status2', in.par= c(par.x1,  par.x2), b, t)
-hqm.est<-arg2[,2] # Indexed HQM estimator on original sample
-time.grid<-arg2[,1] # evaluation grid points
-n.est.points<-length(hqm.est)
-
-# Store original sample values:
+#Store original sample values:
 xin <- pbc2[,c(id, marker_name1, marker_name2, event_time_name, time_name, event_name)]
 n <- length(xin$id)
 nn<-max(  as.double(xin[,'id']) )
 
+xin.id <- to_id(xin)
+
+X1t=xin[,marker_name1] -mean(xin[, marker_name1])
+XX1t=xin.id[,marker_name1] -mean(xin.id[, marker_name1])
+X2t=xin[,marker_name2]  -mean(xin[, marker_name2])
+XX2t=xin.id[,marker_name2] -mean(xin.id[, marker_name2])
+
+X1=list(X1t, X2t)
+XX1=list(XX1t, XX2t)
+
+# Calculate the indexed HQM estimator on the original sample:
+arg2<- SingleIndCondFutHaz(pbc2, id, ls,  X1, XX1, event_time_name = 'years', 
+        time_name = 'year',  event_name = 'status2', in.par= c(par.x1,  par.x2), b, t)
+                          
+hqm.est<-arg2[,2] # Indexed HQM estimator on original sample
+time.grid<-arg2[,1] # evaluation grid points
+n.est.points<- ls # length(hqm.est)
+
 #  Create bootstrap samples by group: 
 set.seed(1)  
-B<-50   #for display purposes only; for sensible results use B=1000 (slower) 
+B<- 50   #for display purposes only; for sensible results use B=1000 (slower) 
 Boot.samples<-list()
 for(j in 1:B)
 {
@@ -128,14 +141,15 @@ for(j in 1:B)
 }     
  
 # Simulate true hazard rate function:    
-true.hazard<- Sim.True.Hazard(Boot.samples, id='id', marker_name1=marker_name1,  
-          marker_name2= marker_name2, event_time_name = event_time_name, 
-          time_name = time_name, event_name = event_name, in.par = c(par.x1, par.x2), b)
+true.hazard<- Sim.True.Hazard(Boot.samples, id='id', n.est.points, 
+              marker_name1=marker_name1, marker_name2= marker_name2, 
+              event_time_name = event_time_name, time_name = time_name, 
+              event_name = event_name, in.par = c(par.x1, par.x2), b)
 
 # Bootstrap the original indexed HQM estimator: 
 res <- Boot.hrandindex.param(B, Boot.samples, marker_name1, marker_name2, event_time_name,
                             time_name,  event_name, b = 0.4, t = t, true.haz = true.hazard, 
-                            v.param = c(0.07, 0.08), n.est.points = 100 )
+                            v.param = c(0.07, 0.08), n.est.points   )
 J <- 80
 a.sig<-0.05   
 

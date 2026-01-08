@@ -1,8 +1,8 @@
-b_selection <- function(data, marker_name, event_time_name = 'years', time_name = 'year', event_name = 'status2', I, b_list){
+b_selection <- function(data,   marker_name, event_time_name = 'years', time_name = 'year', event_name = 'status2', I, b_list){
 
   data.id = to_id(data)
   n = length(data.id$id)
-  size_s_grid <- size_X_grid <- 100
+  size_s_grid <- size_X_grid <-   100
 
   X = data[, marker_name]
   XX = data.id[, marker_name]
@@ -32,7 +32,7 @@ b_selection <- function(data, marker_name, event_time_name = 'years', time_name 
     h_xt_mat_list = prep_cv(data, data.id, marker_name,event_time_name = event_time_name, time_name = time_name, event_name = event_name, n, I, b)
 
     alpha<-get_alpha(N, Y, b, br_X, K=Epan )
-    h_xt_mat = t(sapply(br_s[1:99], function(si){h_xt_vec(br_X,br_s, size_s_grid, alpha, si, b, Yi, int_X, n)}))
+    h_xt_mat = t(sapply(br_s[1:(size_s_grid-1)], function(si){h_xt_vec(br_X,br_s, size_s_grid, alpha, si, b, Yi, int_X, n)}))
 
 
     Q = Q1(h_xt_mat, int_X,  size_X_grid, n, Yi)

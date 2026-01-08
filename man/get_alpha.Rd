@@ -21,7 +21,7 @@ get_alpha(N, Y, b, br_X, K=Epan )
 The function \code{\link{get_alpha}} implements the marker-only hazard estimator
 \deqn{\hat{\alpha}_i(z) = \frac{\sum_{k\neq i}\int_0^T K_{b_1}(z-X_k(s))\mathrm{d}N_k(s)}{\sum_{k\neq i}\int_0^T K_{b_1}(z-X_k(s))Z_k(s)\mathrm{d}s},}
 where \eqn{X} is the marker and \eqn{Z} is the exposure. The marker-only hazard is defined as the underlying hazard which is not dependent on time
-\deqn{\alpha(X(t),t) = \alpha(X(t))}.
+\deqn{\alpha(X(t),t) = \alpha(X(t)).}
 
 }
 

@@ -2,13 +2,15 @@
 \alias{index_optim}
 \title{Indexing parameter objective function}
 \description{Objective used for optimizing indexing parameters via \code{optim}.}
-\usage{index_optim(in.par, data, data.id, X1, XX1, X2, XX2, event_time_name = 'years', 
+\usage{index_optim(in.par, data, data.id, br_s, X1, XX1,  event_time_name = 'years', 
             time_name = 'year', event_name = 'status2', b, t, true.haz)}
 \arguments{
   \item{in.par}{Numeric vector length 2.}
   \item{data}{Data frame.}
   \item{data.id}{Id-level data frame.}
-  \item{X1,XX1,X2,XX2}{Numeric vectors.}
+   \item{br_s}{user-supplied grid points ranging from the minimum to the maximum of the time_name argument}
+  \item{X1}{List of vectors for indexing: each vector corresponds to a biomarker and contains one summary measurement per individual.}
+  \item{XX1}{List of vectors for indexing: each vector corresponds to a single biomarker and contains its longitudinal measurements across all individuals/time points.}
   \item{event_time_name}{Name of event time column.}
   \item{time_name}{Name of observation time column.}
   \item{event_name}{Name of event indicator column.}
@@ -40,11 +42,15 @@ t = par.x1 * t.x1 + par.x2 *t.x2
 
 # first simulate true HR function:
 xin <- pbc2[,c(id, marker_name1, marker_name2, event_time_name, time_name, event_name)]
+ls<-50 # 50 grid points to evaluate the estimates
+s.out<- xin[, 'year']
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
+
 n <- length(xin$id)
 nn<-max(  as.double(xin[,'id']) )
 ###################  Create bootstrap samples by group ####################
 set.seed(1)  
-B<-100
+B<- 10 # 400 #50
 Boot.samples<-list()
 for(j in 1:B)
 {
@@ -62,8 +68,9 @@ for(j in 1:B)
   xin.i<-xin[i.use,]
   Boot.samples[[j]]<- xin.i[order(xin.i$id),] #xin[i.use,]
 }
-true.hazard<- Sim.True.Hazard(Boot.samples, id='id', marker_name1=marker_name1,  
-              marker_name2= marker_name2, event_time_name = event_time_name, 
+true.hazard<- Sim.True.Hazard(Boot.samples, id='id', size_s_grid=ls, 
+              marker_name1=marker_name1, marker_name2= marker_name2, 
+              event_time_name = event_time_name, 
               time_name = time_name,  event_name = event_name, 
               in.par = c(par.x1,  par.x2), b)
 ##########################################################################
@@ -73,15 +80,20 @@ true.hazard<- Sim.True.Hazard(Boot.samples, id='id', marker_name1=marker_name1,
 data.use<-Boot.samples[[1]]
 data.use.id<-to_id(data.use)
 data.use.id<-data.use.id[complete.cases(data.use.id), ]
-X1=data.use[,marker_name1] -mean(data.use[, marker_name1])
-XX1=data.use.id[,marker_name1] -mean(data.use.id[, marker_name1])
-X2=data.use[,marker_name2]  -mean(data.use[, marker_name2])
-XX2=data.use.id[,marker_name2] -mean(data.use.id[, marker_name2])
+X1t=data.use[,marker_name1] -mean(data.use[, marker_name1])
+XX1t=data.use.id[,marker_name1] -mean(data.use.id[, marker_name1])
+X2t=data.use[,marker_name2]  -mean(data.use[, marker_name2])
+XX2t=data.use.id[,marker_name2] -mean(data.use.id[, marker_name2])
 
+X1=list(X1t, X2t)
+XX1=list(XX1t, XX2t)
+
+s.out<- data.use[, time_name]
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
 res<- optim(par=c(par.x1, par.x2), fn=index_optim,  data=data.use, data.id=data.use.id, 
-            X1=X1, XX1=XX1,X2 = X2, XX2 =XX2, event_time_name = event_time_name, 
+            br_s=s.out.use, X1=X1, XX1=XX1,  event_time_name = event_time_name, 
             time_name = time_name, event_name = event_name, b=b, t=t, 
-            true.haz=true.hazard,  method="Nelder-Mead") 
+            true.haz=true.hazard, method="Nelder-Mead") 
 }
  
 }

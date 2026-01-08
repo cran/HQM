@@ -13,16 +13,22 @@ BwB.HRandIndex.param<-function(B, B1, Boot.samples, marker_name1, marker_name2, 
     data.use<-Boot.samples[[k]]
     data.use.id<-to_id(data.use)
     data.use.id<-data.use.id[complete.cases(data.use.id), ]
-    X1=data.use[,marker_name1] -mean(data.use[, marker_name1])
-    XX1=data.use.id[,marker_name1] -mean(data.use.id[, marker_name1])
-    X2=data.use[,marker_name2]  -mean(data.use[, marker_name2])
-    XX2=data.use.id[,marker_name2] -mean(data.use.id[, marker_name2])
+    X1t=data.use[,marker_name1] -mean(data.use[, marker_name1])
+    XX1t=data.use.id[,marker_name1] -mean(data.use.id[, marker_name1])
+    X2t=data.use[,marker_name2]  -mean(data.use[, marker_name2])
+    XX2t=data.use.id[,marker_name2] -mean(data.use.id[, marker_name2])
     
-    res <- optim(par = v.param, fn = index_optim, data = data.use, data.id = data.use.id, X1 = X1, 
-                 XX1 = XX1, X2 = X2,  XX2 = XX2, event_time_name = event_time_name, time_name = time_name,
+    s = data.use[,time_name]
+    br_s = seq(0, max(s), max(s)/( n.est.points-1))
+    
+    X1=list(X1t, X2t)
+    XX1=list(XX1t, XX2t)
+    
+    res <- optim(par = v.param, fn = index_optim, data = data.use, data.id = data.use.id, br_s=br_s, X1 = X1,  
+                 XX1 = XX1,  event_time_name = event_time_name, time_name = time_name,
                  event_name = event_name, b = b, t = t, true.haz = true.haz,  method = "Nelder-Mead" )
     
-    boot.haz<-Boot.hqm(c(res$par[1],res$par[2]), data.use, data.use.id, X1, XX1, X2, XX2, event_time_name = 'years', 
+    boot.haz <- Boot.hqm(c(res$par[1],res$par[2]), data.use, data.use.id, n.est.points,  X1=X1, XX1=XX1,  event_time_name = 'years', 
                                                     time_name = 'year', event_name = 'status2', b, t)
     Mat.boot.haz.rate.i<-matrix(nrow=n.est.points, ncol=B1) 
     
@@ -53,12 +59,18 @@ BwB.HRandIndex.param<-function(B, B1, Boot.samples, marker_name1, marker_name2, 
       X2.j1=data.use.j1[,marker_name2]  -mean(data.use.j1[, marker_name2])
       XX2.j1=data.use.id.j1[,marker_name2] -mean(data.use.id.j1[, marker_name2])
       
-      res <- optim(par = v.param, fn = index_optim, data = data.use.j1,  data.id = data.use.id.j1, X1 = X1.j1,
-                    XX1 = XX1.j1, X2 = X2.j1, XX2 = XX2.j1,  event_time_name = event_time_name,  
+      s.j = data.use.j1[,time_name]
+      br_s.j = seq(0, max(s.j), max(s.j)/( n.est.points-1))
+      
+      X1j=list(X1.j1, X2.j1)
+      XX1j=list(XX1.j1, XX2.j1)
+      
+      res <- optim(par = v.param, fn = index_optim, data = data.use.j1,  data.id = data.use.id.j1, br_s = br_s.j, X1 = X1j,
+                    XX1 = XX1j,   event_time_name = event_time_name,  
                     time_name = time_name, event_name = event_name,  b = b, t = t,  true.haz = true.haz, 
                     method = "Nelder-Mead")
       
-      boot.haz.i<-Boot.hqm (c(res$par[1],res$par[2]), data.use.j1, data.use.id.j1, X1.j1, XX1.j1, X2.j1, XX2.j1,  
+      boot.haz.i<-Boot.hqm (c(res$par[1],res$par[2]), data.use.j1, data.use.id.j1, n.est.points, X1j, XX1j,  
                               event_time_name = 'years', time_name = 'year', event_name = 'status2',   b, t)
       Mat.boot.haz.rate.i[,j1]<-boot.haz.i
     }

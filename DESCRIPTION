@@ -2,7 +2,7 @@ Package: HQM
 Type: Package
 Title: Superefficient Estimation of Future Conditional Hazards Based on
         Marker Information
-Version: 1.1
+Version: 2.0
 Authors@R: c(person(given = "Dimitrios",
            family = "Bagkavos",
            role = c("aut", "cre"),
@@ -29,11 +29,11 @@ Imports: stats, utils, survival, pec, timeROC, nlme, JM
 License: GPL (>= 2)
 NeedsCompilation: no
 RoxygenNote: 6.1.0
-Packaged: 2025-12-03 20:44:05 UTC; Dimitrios Bagkavos
+Packaged: 2025-12-09 17:59:11 UTC; Dimitrios Bagkavos
 Author: Dimitrios Bagkavos [aut, cre],
   Alex Isakson [ctb],
   Enno Mammen [ctb],
   Jens Nielsen [ctb],
   Cecile Proust-Lima [ctb]
 Repository: CRAN
-Date/Publication: 2025-12-03 21:00:10 UTC
+Date/Publication: 2026-01-08 02:30:02 UTC

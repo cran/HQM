@@ -6,7 +6,7 @@ Implements the bandwidth selection for the future conditional hazard rate \eqn{\
 }
 
 \usage{
-b_selection(data, marker_name, event_time_name = 'years',
+b_selection(data,   marker_name, event_time_name = 'years',
             time_name = 'year', event_name = 'status2', I, b_list)
 }
 
@@ -44,8 +44,9 @@ Biometrika, 112(2), asaf008. \doi{10.1093/biomet/asaf008}
 I = 26
 # For Albumin marker:
 b_list = seq(0.9, 1.7, 0.1)
+ 
 
-b_scores_alb = b_selection(pbc2, 'albumin', 'years', 'year', 'status2', I, b_list)
+b_scores_alb = b_selection(pbc2,  'albumin', 'years', 'year', 'status2', I, b_list)
 b_scores_alb[[2]][which.min(b_scores_alb[[1]])]
 
 # For Bilirubin marker:

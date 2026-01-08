@@ -25,7 +25,7 @@ b_selection_index_optim(in.par, data, marker_name1, marker_name2,
 \details{
 The function \code{\link{b_selection_index_optim}} implements the cross validation index parameter selection for the indexing of two markers and  given by
 \deqn{ \hat \theta = arg min_{\theta_1, \theta_2} \sum_{i = 1}^N \int_0^T \int_s^T Z_i(t)Z_i(s)(\hat{h}_{\theta_0^T X_i(s)}(t-s)- h_{\theta_0^T X_i(s)}(t-s))^2 dt ds,}
-where \eqn{\hat h_x(t)} is the HQM estimator of \eqn{ h_x(t)}, see \doi{10.1093/biomet/asaf008}, and \eqn{Z_i} the exposure process of individual \eqn{i}. Note that \eqn{\hat h_x(t)} is dependent on \eqn{b}.
+where \eqn{\hat h_x(t)} is the HQM estimator of \eqn{ h_x(t)}, see Bagkavos et al. (2025), \doi{10.1093/biomet/asaf008}, and \eqn{Z_i} the exposure process of individual \eqn{i}. Note that \eqn{\hat h_x(t)} is dependent on \eqn{b}.
 }
 
 \value{

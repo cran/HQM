@@ -29,7 +29,7 @@ for every \eqn{x} on the marker grid,  where, for a positive integer \eqn{p},  \
 and \eqn{K_b = b^{-1}K(./b)} is an ordinary kernel function, e.g. the Epanechnikov kernel.
 For \eqn{p=1} and \eqn{\hat \theta = 1} the above estimator becomes the HQM hazard rate estimator conditional on one covariate, 
  \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i( X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x- X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-  X_i(s))\mathrm {d}s},}
-defined in equation (2) of \doi{10.1093/biomet/asaf008}. 
+defined in equation (2) of Bagkavos et al. (2025), \doi{10.1093/biomet/asaf008}. 
 }
 
 
@@ -93,7 +93,7 @@ pbcT1 <- pbc2.use[which(pbc2.use$year< Landmark  & pbc2.use$years> Landmark),]
 
 timesS2 <- seq(Landmark,14,by=0.5)
 b=0.9
-arg1<- get_h_x(pbcT1, 'albumin', event_time_name = 'years',  time_name = 'year', 
+arg1<- get_h_x(pbcT1, 'albumin', br_s=br_s,  event_time_name = 'years',  time_name = 'year', 
                                                     event_name = 'status2', 2, b) 
 br_s2  = seq(Landmark, 14,  length=99)
 sfalb2<- make_sf(    (br_s2[2]-br_s2[1])/1.35 , arg1)

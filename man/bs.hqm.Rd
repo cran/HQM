@@ -35,13 +35,17 @@ library(survival)
 Landmark <- 2
 
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
+ls<-50 # 50 grid points to evaluate the estimates
+s.out<- pbcT1[, 'year']
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
+ 
 timesS2 <- seq(Landmark,14,by=0.5)
 
 
 b=0.9
-arg1<- get_h_x(pbcT1, 'albumin', event_time_name = 'years',  
+arg1<- get_h_x(pbcT1, 'albumin', br_s = s.out.use, event_time_name = 'years',  
                time_name = 'year', event_name = 'status2', 2, 0.9) 
-br_s2  = seq(Landmark, 14,  length=99)
+br_s2  = seq(Landmark, 14,  length=ls-1)
 sfalb2<- make_sf(    (br_s2[2]-br_s2[1])/4 , arg1)
 
 

@@ -85,21 +85,42 @@ time_name <- 'year'
 event_name <- 'status2'
 id<-'id'
 
+xin <- pbc2[,c(id, marker_name1, marker_name2, event_time_name, time_name, event_name)]
+n <- length(xin$id)
+nn<-max(  as.double(xin[,'id']) )
+
+xin.id <- to_id(xin)
+
 par.x1  <- 0.0702 #0.149
 par.x2 <- 0.0856 #0.10
 t.x1 = 0 # refers to zero mean variables - slightly high
 t.x2 = 1.9 # refers to zero mean variable - high
 b = 0.42#par.alb * b.alb + par.bil *b.bil # 7
 t = par.x1 * t.x1 + par.x2 *t.x2
+ls<-50
 
-xin <- pbc2[,c(id, marker_name1, marker_name2, event_time_name, time_name, event_name)]
-n <- length(xin$id)
-nn<-max(  as.double(xin[,'id']) )
+X1t=xin[,marker_name1] -mean(xin[, marker_name1])
+XX1t=xin.id[,marker_name1] -mean(xin.id[, marker_name1])
+X2t=xin[,marker_name2]  -mean(xin[, marker_name2])
+XX2t=xin.id[,marker_name2] -mean(xin.id[, marker_name2])
+
+X1=list(X1t, X2t)
+XX1=list(XX1t, XX2t)
+
+# Calculate the indexed HQM estimator on the original sample:
+arg2<- SingleIndCondFutHaz(pbc2, id, ls,  X1, XX1, event_time_name = 'years', 
+        time_name = 'year',  event_name = 'status2', in.par= c(par.x1,  par.x2), b, t)
+                          
+hqm.est<-arg2[,2] # Indexed HQM estimator on original sample
+time.grid<-arg2[,1] # evaluation grid points
+n.est.points<- ls # length(hqm.est)
+
+
 
 #  Create bootstrap samples by group 
 set.seed(1)  
-B<-5 #for display purposes only; for sensible results use B=200 (slower) 
-B1<-5  #for display purposes only; use B1=20 (slower)
+B<-10 # 20 # 5 for display purposes only; for sensible results use B=200 (slower) 
+B1<- 10 # 20  # 5 for display purposes only; use B1=20 (slower)
 Boot.samples<-list()
 for(j in 1:B)
 {
@@ -118,18 +139,13 @@ for(j in 1:B)
   Boot.samples[[j]]<- xin.i[order(xin.i$id),]  
 }
  
-# Calculate the indexed HQM estimator on the original sample:
-arg2<-SingleIndCondFutHaz(pbc2, id, marker_name1, marker_name2, event_time_name = 'years', 
-                    time_name = 'year',  event_name = 'status2', in.par= c(par.x1,  par.x2), b, t)
-hqm.est<-arg2[,2] # Indexed HQM estimator on original sample
-time.grid<-arg2[,1] # evaluation grid points
-n.est.points<-length(hqm.est)
+
 
 # Simulate true hazard rate function:
-true.hazard<- Sim.True.Hazard(Boot.samples, id='id', marker_name1=marker_name1,  
-              marker_name2= marker_name2, event_time_name = event_time_name, 
-              time_name = time_name, event_name = event_name, 
-              in.par = c(par.x1,  par.x2), b)
+true.hazard<- Sim.True.Hazard(Boot.samples, id='id', n.est.points, 
+              marker_name1=marker_name1, marker_name2= marker_name2, 
+              event_time_name = event_time_name, time_name = time_name, 
+              event_name = event_name, in.par = c(par.x1,  par.x2), b)
 
 # Bootstrap the original indexed HQM estimator:                              
 all.mat.use<-BwB.HRandIndex.param(B, B1, Boot.samples, marker_name1, marker_name2, 

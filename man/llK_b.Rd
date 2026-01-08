@@ -28,7 +28,7 @@ c_{ij}  = \sum_{i=1}^n \int_0^T K_b(x-X_i(s))\{x-X_{ij}(s)\} Z_i(s)ds,}
 \deqn{
 d_{jk}  =  \sum_{i=1}^n \int_0^T K_b(x-X_i(s))\{x-X_{ij}(s)\}\{x-X_{ik}(s)\} Z_i(s)ds,
 }
-see also \doi{10.1080/03461238.1998.10413997}.
+see also Nielsen (1998), \doi{10.1080/03461238.1998.10413997}.
 }
 
 \value{

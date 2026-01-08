@@ -29,7 +29,7 @@ where, for a positive integer \eqn{p},  \eqn{\hat \theta^T = (\hat \theta_1, \do
 \eqn{X_i = (X_{1, i}, \dots, X_{i,p})} is a vector of markers for indexing, \eqn{Z_i} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details 
 and \eqn{K_b = b^{-1}K(./b)} is an ordinary kernel function, e.g. the Epanechnikov kernel. For \eqn{p=1} and \eqn{\hat \theta = 1} the above estimator becomes the HQM hazard rate estimator conditional on one covariate, 
 \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i(X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-X_i(s))\mathrm {d}s},}
-defined in equation (2) of \doi{10.1093/biomet/asaf008}. 
+defined in equation (2) of Bagkavos et al. (2025) \doi{10.1093/biomet/asaf008}. 
 
 The future conditional hazard is defined as
 \deqn{h_{x,T}(t) = P\left(T_i\in (t+T, t+T+dt)| \theta_0^T X_i(T)=x, T_i > t+T\right),}

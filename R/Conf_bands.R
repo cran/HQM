@@ -1,4 +1,4 @@
-Conf_bands <- function(data, marker_name, event_time_name = 'years', time_name = 'year', event_name = 'status2', x, b){
+Conf_bands <- function(data,   marker_name, event_time_name = 'years', time_name = 'year', event_name = 'status2', x, b){
 
   ##############################################################################
   data.id = to_id(data)
@@ -26,70 +26,44 @@ Conf_bands <- function(data, marker_name, event_time_name = 'years', time_name =
   Yi <- make_Yi(data, data.id, X_lin, breaks_X=br_X, breaks_s=br_s,size_s_grid,size_X_grid, int_s,int_X, event_time = event_time_name, n)
   Ni = make_Ni(breaks_s=br_s, size_s_grid, ss, delta, n)
   ##############################################################################
-
   alpha<-get_alpha(N, Y, b, br_X, K=Epan )
-
   l_t = (length(br_s)-1)
-
   Boot = matrix(1, n, l_t)
   sBoot = matrix(1, n, l_t)
   sigma = 1:l_t
   sigma_2 = 1:l_t
   h = 1:l_t
 
-  for(i in 1:l_t){
-
+  for(i in 1:l_t)
+  {
     Booti = 1:n
-
-
     g = g_xt( br_X, br_s, size_s_grid, int_X, x, br_s[i], b, Yi, Y, n)
     Boot_all = prep_boot(g, alpha, Ni, Yi, size_s_grid, br_X, br_s, br_s[i], b, int_X, x, n)
-
 
     A_1 = Boot_all[[1]]
     A_2 = Boot_all[[2]]
     B = Boot_all[[3]]
     h[i] = Boot_all[[4]]
     Gamma = Boot_all[[5]]
-
-
     A_B = (A_1 - A_2)/Gamma
-
-
-    for(j in 1:n){
-
+    for(j in 1:n)
+    {
       Vi = rnorm(n)
-
       Booti[j] = sum(Vi*(A_B + B))/sqrt(sum((A_B + B)^2))
     }
-
-
     if(is.nan(sum(Booti)) == TRUE ){ Booti = replicate(n,0)}
-
     sBoot[,i] = sort(Booti)
     Boot[,i] = Booti
     sigma[i] = sum((A_B + B)^2)
     sigma_2[i] = var(Boot[,i])
-
-
-
-
   }
-
   mBoot = 1:l_t
-  for(i in 1:l_t){
-    mBoot[i] = sort(abs(Boot[,i]))[(n*0.95)]
-  }
-
+  for(i in 1:l_t){  mBoot[i] = sort(abs(Boot[,i]))[(n*0.95)]  }
   W_N = max(mBoot)
 
   nBoot = 1:n
-  for(i in 1:n){
-    nBoot[i] = max(abs(Boot[i,]))
-  }
-
+  for(i in 1:n){  nBoot[i] = max(abs(Boot[i,])) }
   W_Nn = sort(nBoot)[(n*0.95)]
-
   I_p_up = h - sqrt(sigma)*sBoot[(n*0.025),]/sqrt(n)
   I_p_do = h - sqrt(sigma)*sBoot[(n*0.975),]/sqrt(n)
 

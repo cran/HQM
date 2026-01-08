@@ -31,7 +31,7 @@ for every \eqn{x} on the marker grid,  where, for a positive integer \eqn{p},  \
 \eqn{X_i = (X_{1, i}, \dots, X_{i,p})} is a vector of markers for indexing, \eqn{Z_i} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details.
 For \eqn{p=1} and \eqn{\hat \theta = 1} the above estimator becomes the HQM hazard rate estimator conditional on a single covariate, 
  \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i( X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x- X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-  X_i(s))\mathrm {d}s},}
-defined in equation (2) of \doi{10.1093/biomet/asaf008}.  In the place of \eqn{K_b()},  \code{\link{h_xtll}} uses the kernel    
+defined in equation (2) of Bagkavos et al. (2025) \doi{10.1093/biomet/asaf008}.  In the place of \eqn{K_b()},  \code{\link{h_xtll}} uses the kernel    
 \deqn{K_{x,b}(u)= \frac{K_b(u)-K_b(u)u^T D^{-1}c_1}{c_0 - c_1^T D^{-1} c_1}, }
 where \eqn{K_b() = b^{-1}K(./b)} with  \eqn{K} being an ordinary kernel, e.g. the Epanechnikov kernel, \eqn{c_1 = (c_{11}, \dots, c_{1d})^T, D = (d_{ij})_{(d+1) \times (d+1)}} with
 \deqn{
@@ -42,7 +42,7 @@ c_{ij}  = \sum_{i=1}^n \int_0^T K_b(x-\hat \theta^T X_i(s))\{x-\hat \theta^T X_{
 d_{jk}    =  \sum_{i=1}^n \int_0^T K_b(x-\hat \theta^T X_i(s))\{x-\hat \theta^T X_{ij}(s)\}\{x-\hat \theta^T X_{ik}(s)\} Z_i(s)ds,
 }
 
-see also \doi{10.1080/03461238.1998.10413997}.
+see also Nielsen (1998) \doi{10.1080/03461238.1998.10413997}.
 
 The future conditional hazard is defined as
 \deqn{h_{x,T}(t) = P\left(T_i\in (t+T, t+T+dt)| \theta_0^T X_i(T)=x, T_i > t+T\right),}

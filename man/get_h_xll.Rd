@@ -5,11 +5,12 @@
 Calculates the (indexed) local linear future hazard rate function, conditional on a marker value \code{x}, across a set of time values \code{t}.
 }
 
-\usage{ get_h_xll(data, marker_name, event_time_name, time_name, event_name, x, b)}
+\usage{ get_h_xll(data, marker_name, br_s, event_time_name, time_name, event_name, x, b)}
 
 \arguments{
   \item{data}{A data frame of time dependent data points.  Missing values are allowed.}
   \item{marker_name}{The column name of the marker values in the data frame \code{\link{data}}. }
+  \item{br_s}{ User defined grid mesh on time_name variable }
   \item{event_time_name}{The column name of the event times in the data frame \code{\link{data}}. }
   \item{time_name}{The column name of the times the marker values were observed in the data frame \code{\link{data}}.}
   \item{event_name}{The column name of the events in the data frame \code{\link{data}}.}
@@ -24,7 +25,7 @@ across a grid of possible time values \eqn{t}, where, for a positive integer \eq
 \eqn{X_i = (X_{1, i}, \dots, X_{i,p})} is a vector of markers for indexing, \eqn{Z_i} is the exposure and \eqn{\alpha(z)} is the marker-only hazard, see \code{\link{get_alpha}} for more details. 
 For \eqn{p=1} and \eqn{\hat \theta = 1} the above estimator becomes the HQM hazard rate estimator conditional on one covariate, 
  \deqn{\hat{h}_x(t) = \frac{\sum_{i=1}^n \int_0^T\hat{\alpha}_i( X_i(t+s))Z_i(t+s)Z_i(s)K_{b}(x- X_i(s))\mathrm {d}s}{\sum_{i=1}^n\int_0^TZ_i(t+s)Z_i(s)K_{b}(x-  X_i(s))\mathrm {d}s},}
-defined in equation (2) of \doi{10.1093/biomet/asaf008}.  In the place of \eqn{K_b()},  \code{\link{get_h_xll}} uses the kernel    
+defined in equation (2) of Bagkavos et al. (2025) \doi{10.1093/biomet/asaf008}.  In the place of \eqn{K_b()},  \code{\link{get_h_xll}} uses the kernel    
 \deqn{K_{x,b}(u)= \frac{K_b(u)-K_b(u)u^T D^{-1}c_1}{c_0 - c_1^T D^{-1} c_1}, }
 where \eqn{K_b() = b^{-1}K(./b)} with  \eqn{K} being an ordinary kernel, e.g. the Epanechnikov kernel, \eqn{c_1 = (c_{11}, \dots, c_{1d})^T, D = (d_{ij})_{(d+1) \times (d+1)}} with
 \deqn{
@@ -34,7 +35,7 @@ c_{ij}  = \sum_{i=1}^n \int_0^T K_b(x-\hat \theta^T X_i(s))\{x-\hat \theta^T X_{
 \deqn{
 d_{jk}    =  \sum_{i=1}^n \int_0^T K_b(x-\hat \theta^T X_i(s))\{x-\hat \theta^T X_{ij}(s)\}\{x-\hat \theta^T X_{ik}(s)\} Z_i(s)ds,
 }
-see also \doi{10.1080/03461238.1998.10413997}.
+see also Nielsen (1998), \doi{10.1080/03461238.1998.10413997}.
 }
 
 \value{
@@ -65,13 +66,18 @@ Landmark <- 2
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
 b=0.9
 
-arg1ll<-get_h_xll(pbcT1, 'albumin', event_time_name = 'years', time_name = 'year',
+ls<-50 # 50 grid points to evaluate the estimates
+s.out<- pbcT1[, 'year']
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
+
+
+arg1ll<-get_h_xll(pbcT1, 'albumin', br_s = s.out.use, event_time_name = 'years', time_name = 'year',
                   event_name = 'status2', 2, 0.9) 
-arg1lc<-get_h_x(pbcT1, 'albumin', event_time_name = 'years', time_name = 'year',
+arg1lc<-get_h_x(pbcT1, 'albumin', br_s = s.out.use, event_time_name = 'years', time_name = 'year',
                 event_name = 'status2', 2, 0.9) 
 
 #Calculate the local contant and local linear survival functions
-br_s  = seq(Landmark, 14,  length=99)
+br_s  = seq(Landmark, 14,  length=ls-1)
 sfalb2ll<- make_sf((br_s[2]-br_s[1])/4 , arg1ll)
 sfalb2lc<- make_sf((br_s[2]-br_s[1])/4 , arg1lc)
 
@@ -98,6 +104,9 @@ coxFit <- coxph(Surv(years, status2) ~ serBilir, data = pbc2.id, x = TRUE)
 jointFit0 <- jointModel(lmeFit, coxFit, timeVar = "year", 
                                 method = "piecewise-PH-aGH")
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
+ls<-50 # 50 grid points to evaluate the estimates
+s.out<- pbcT1[, 'year']
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
  
 timesS1 <- seq(1,14,by=0.5)
 predT1 <- survfitJM(jointFit0, newdata = pbcT1,survTimes = timesS1)
@@ -111,9 +120,9 @@ for(r in 1:nm)
 }
 sfit1y<-rowMeans(mat.out1, na.rm=TRUE)
 
-arg1<- get_h_xll(pbcT1, 'serBilir', event_time_name = 'years',  
+arg1<- get_h_xll(pbcT1, 'serBilir', br_s= s.out.use,  event_time_name = 'years',  
         time_name = 'year', event_name = 'status2', 1, 10) 
-br_s1  = seq(Landmark, 14,  length=99)
+br_s1  = seq(Landmark, 14,  length=ls-1)
 sfbil1<- make_sf((br_s1[2]-br_s1[1])/5.4 , arg1)
 kma1<- survfit(Surv(years , status2) ~ 1, data = pbcT1)
 
@@ -135,6 +144,10 @@ jointFit <- jointModel(lmeFit, coxFit, timeVar = "year",
 
 Landmark <- 1
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]
+ls<-50 # 50 grid points to evaluate the estimates
+s.out<- pbcT1[, 'year']
+s.out.use <-  seq(0, max(s.out), max(s.out)/( ls-1))
+
 
 # Index Albumin and Bilirubin: 
 t.alb = 3  # slightly low albumin value
@@ -164,9 +177,9 @@ JM.surv.est<-rowMeans(mat.out1, na.rm=TRUE) #average the resulting JM estimates
 b.alb = 1.5  
 b.bil = 4
 b.hqm   =  par.alb * b.alb + par.bil *b.bil # bandwidth for HQM estimator 
-arg1<- get_h_xll(pbcT1, 'drug', event_time_name = 'years',  time_name = 'year', 
+arg1<- get_h_xll(pbcT1, 'drug', br_s = s.out.use, event_time_name = 'years',  time_name = 'year', 
                                                event_name = 'status2', t, b.hqm)
-br_s2  = seq(Landmark, 14,  length=99) #grid points for HMQ estimator
+br_s2  = seq(Landmark, 14,  length=ls-1) #grid points for HMQ estimator
 hqm.surv.est<- make_sf((br_s2[2]-br_s2[1])/5  ,arg1) # transform HR to Survival func.
 
 km.land<- survfit(Surv(years , status2) ~ 1, data = pbcT1) #KM estimate
