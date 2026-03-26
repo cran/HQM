@@ -30,7 +30,6 @@ A vector of two values: the landmark time of the calculation and the AUC value.
 \seealso{ \code{\link{bs.hqm} }}
 
 \examples{
-library(timeROC)
 library(survival)
 Landmark <- 2
 pbcT1 <- pbc2[which(pbc2$year< Landmark  & pbc2$years> Landmark),]

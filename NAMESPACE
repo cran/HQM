@@ -1,11 +1,11 @@
-importFrom("stats", "approxfun", "approx", "rnorm", "var", "complete.cases", "optim", "quantile", "sd")
+importFrom("stats", "approxfun", "approx", "rnorm", "var", "complete.cases", "optim", "quantile", "sd", "as.formula")
 
 importFrom("utils",  tail )
 importFrom("JM",  survfitJM )
 importFrom("survival",  survfit, Surv, coxph )
-importFrom("timeROC",  timeROC )
 importFrom("pec",  pec )
 importFrom("nlme",  lme )
+ 
 
 
 exportPattern("^[[:alpha:]]+")

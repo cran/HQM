@@ -1,8 +1,9 @@
-ba6e5abeb0528f12863d16df0ef5905f *DESCRIPTION
-37646c77f7e6be2610b559cdf04cea22 *NAMESPACE
+0d5c39d372249c1d75a1b9bf78fda829 *DESCRIPTION
+c9eb3afc1139060aaed49f4563af4d4e *NAMESPACE
 371a0e2812c270be7b58269585d3130b *R/Boot.HRandIndex.param.R
 eefbe1bc104a2e812673d2681057c79a *R/Boot.hqm.R
 7a8e990a1a9bed10cc24f37aeb87d639 *R/BwB.HRandIndex.param.R
+70b8d471471eb0d95e4a05b4707ca2aa *R/Compute.iid.KM.R
 9456a93ce84c5d54e19853f01f14accf *R/Conf_bands.R
 c1c07c55dae7698f95bda001c2d0d6ca *R/Epan.R
 e15c726b1be19b5fd0096e7777ed6179 *R/Exposure_Occurence.R
@@ -19,6 +20,7 @@ d53601f2fbcac6f837342cb2a658ef55 *R/b_selection.R
 2b42e1e6166f3d13176099872467e9cb *R/b_selection_index_optim.R
 e7f9c5ea39e30dfd6b1c59404c2e913f *R/b_selection_prep_g.R
 c1b096448fc85d3cb0b270f113d47ec5 *R/bs.hqm.R
+d2395c8c2154fa51ee859e0e4ff4b63a *R/compute_iid_decomposition.R
 2779c2e8ec48ff48a2e05939690f0c0d *R/dataset_split.R
 bd9722080fb8263d1abfa8c2c6a4b153 *R/dij.R
 0187da1e48515beb7986b776ec297e64 *R/g_xt.R
@@ -36,12 +38,14 @@ dad0910ee88e96988325283e8d74e17d *R/llweights.R
 ca96843512f35de250743f43a746171d *R/prep_boot.R
 998a0ea1129829885ecf2ebcda03db90 *R/prep_cv.R
 4fd9d077e0980b883e9c3fa74d5dc7cd *R/prep_cv2.R
+bc9d482471a06b1c56e250e197934e3c *R/timeRoc.R
 527a30d1b8cee7a86e26b3b59f70f989 *R/to_id.R
-cb3b20077bebc5da31fc1b46c657c0ff *build/partial.rdb
+f61db891eb928123aba4412ca322f508 *build/partial.rdb
 7ccccbe07f5cdaef19d78fdd78c62a93 *data/pbc2.rda
 0bf97a6626fd00c3ad8cb2cac4fc1ec9 *man/Boot.HRandIndex.param.Rd
 1d63ccb7df5330f74b4a665f3db16a31 *man/Boot.hqm.Rd
 d3deedde6975ebe23f8e96fa800f9ff0 *man/BwB.HRandIndex.param.Rd
+6527f91185db8831e68ed0f386df5ed4 *man/Compute.iid.KM.Rd
 01300737555f9b31628f7f49b2391a2e *man/Conf_bands.Rd
 58502695aa43d4c78bef8ab2a4bc0086 *man/Epan.Rd
 a3ad8235ffdbf856580e01a84c905cd5 *man/Exposure_Occurence.Rd
@@ -53,11 +57,12 @@ ba0e3409f50c3da638709cbe5e4cff56 *man/Quantile.Index.CIs.Rd
 e4fa5c931dc4d913a1770c717021fb7c *man/Sim.True.Hazard.Rd
 af8a9cf2c081033f98849ed1af1f8a50 *man/SingleIndCondFutHaz.Rd
 f444ba3b87ecf9afb9b62a08a2ba8b18 *man/StudentizedBwB.Index.CIs.Rd
-c18a031cdbf3638c353f795bf8f38b65 *man/auc.hqm.Rd
+974fec72e107ad34257271007144f3c0 *man/auc.hqm.Rd
 4eec5c060e8ccc4f86f725191b54d097 *man/b_selection.Rd
 e681e480044412cf699f0eef8c5c733c *man/b_selection_index_optim.Rd
 8c93bad7eccc8befb34320bd25ed72fb *man/b_selection_prep_g.Rd
 ee2b97a3ed5155129576bd007026d3ad *man/bs.hqm.Rd
+f23e88b6f39818361d3462a40bb0a498 *man/compute_iid_decomposition.Rd
 f5bc66424094c2f45a113cc76c038b6f *man/dataset_split.Rd
 b33e35783e2ad3df7866e482e044adab *man/dij.Rd
 3e2aa66b55eeb69954cfc16e525cad33 *man/g_xt.Rd
@@ -76,4 +81,5 @@ dcd95ed64322a3d12a8813d40c17a722 *man/llweights.Rd
 4a9e0a6b89612297c5160062fdbb148a *man/prep_boot.Rd
 e56a8847b23b6d51443c06e16701cdb7 *man/prep_cv.Rd
 4457d17f53761b4927c916d7cddddd45 *man/prep_cv2.Rd
+990e4e7bc08a562c69550101c63e34bd *man/timeRoc.Rd
 b879f5cf88500f4cbe5a1209f287c197 *man/to_id.Rd
